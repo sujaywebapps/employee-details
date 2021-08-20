@@ -1,7 +1,11 @@
-const express = require('express');
+import express from "express";
+import { getEmployees, addEmployee } from "../controllers/employeeControllers";
 const router = express.Router();
-const controllers = require('./../controllers/controllers');
 
-router.get('/say-something', controllers.saySomething);
+// get
+router.get("/employees", getEmployees);
 
-module.exports = router;
+// Post
+router.post("/add-employee", addEmployee);
+
+export default router;
