@@ -1,4 +1,5 @@
 import React, { useReducer } from "react";
+import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import TextField from "@material-ui/core/TextField";
@@ -9,6 +10,7 @@ import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import { reducer, initialState } from "./reducer";
+import { groupList, managersList } from "../../const";
 
 const useStyles = makeStyles({
   root: {
@@ -68,9 +70,11 @@ function AddEmployeeForm(props) {
               dispatch({ type: "group", payload: event.target.value });
             }}
           >
-            <MenuItem value={1}>Group 1</MenuItem>
-            <MenuItem value={2}>Group 2</MenuItem>
-            <MenuItem value={3}>Group 3</MenuItem>
+            {groupList.map((g) => (
+              <MenuItem key={g.value} value={g.value}>
+                {g.label}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
         <TextField
@@ -100,12 +104,27 @@ function AddEmployeeForm(props) {
               dispatch({ type: "manager", payload: event.target.value });
             }}
           >
-            <MenuItem value={"m1"}>Manager 1</MenuItem>
-            <MenuItem value={"m2"}>Manager 2</MenuItem>
-            <MenuItem value={"m3"}>Manager 3</MenuItem>
+            {managersList.map((m) => (
+              <MenuItem key={m.value} value={m.value}>
+                {m.label}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
-        <Button variant="contained" color="primary">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            axios
+              .post("/api/v1/add-employee", {
+                ...state,
+                createdAt: new Date(),
+              })
+              .then((res) => {
+                console.log("res", res);
+              });
+          }}
+        >
           Add
         </Button>
       </form>

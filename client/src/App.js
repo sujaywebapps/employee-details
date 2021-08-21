@@ -11,6 +11,8 @@ import {
 import { navMenu } from "./const";
 import AddEmployeeForm from "./components/AddEmployeeForm";
 import styled from "styled-components";
+import EmployeeList from "./components/EmployeeList";
+import Analytics from "./components/Analytics";
 
 const Container = styled.div`
   display: flex;
@@ -20,26 +22,30 @@ const Container = styled.div`
 `;
 const App = () => {
   const [response, setResponse] = useState({});
-  useEffect(() => {
-    axios.get("/api/v1/employees").then((res) => {
-      setResponse(res.data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.post("/api/v1/add-employee").then((res) => {
+  //     setResponse(res.data);
+  //   });
+  // }, []);
   return (
     <div className="App">
       <Router>
         <Navbar menuList={navMenu} />
         <Container>
           <Switch>
-            <Route exact path="/" render={() => <Redirect to="/analytics" />} />
+            <Route
+              exact
+              path="/"
+              render={() => <Redirect to="/add-employee" />}
+            />
             <Route path="/add-employee">
               <AddEmployeeForm />
             </Route>
             <Route path="/list-employee">
-              <h1>{response?.body} List</h1>
+              <EmployeeList />
             </Route>
             <Route path="/analytics">
-              <h1>{response?.body} Analytics</h1>
+              <Analytics />
             </Route>
           </Switch>
         </Container>
