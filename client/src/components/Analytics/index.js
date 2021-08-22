@@ -6,10 +6,10 @@ import styled from "styled-components";
 import CascadeLayout from "../CascadeLayout";
 import mockData from "./mockData";
 import LineGraph from "../graphs/LineGraph";
-
-import { makeStyles } from "@material-ui/styles";
-import TextField from "@material-ui/core/TextField";
 import DateRange from "../DateRange";
+import DonutGraph from "../graphs/DonutGraph";
+import { groupByDate } from "./utils";
+import { getGroup, sortArr } from "../../utils";
 
 const RotateText = styled.div`
   ${window.innerWidth > 768
@@ -19,6 +19,12 @@ const RotateText = styled.div`
 
 const AccWrp = styled.div`
   width: 80%;
+
+  .acc-item-desc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const LineWrap = styled.div`
@@ -26,27 +32,23 @@ const LineWrap = styled.div`
   flex-direction: column;
   padding: 1rem;
   align-items: center;
+`;
 
-  & > div {
-    margin-bottom: 2rem;
-  }
+const DonutWrp = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  justify-content: center;
+  align-items: center;
 `;
 const selectedGraphs = ["Line", "Pie", "Histogram", "Hierarchy"];
 
 function Analytics(props) {
   const [lineData, setLineData] = useState([]);
+  const [pieData, setPieData] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  const groupByDate = (arrObj) => {
-    const groupedResult = arrObj.reduce(function (r, a) {
-      const createdAt = moment(new Date(a.createdAt)).format("DD/MM/YYYY");
-      r[createdAt] = r[createdAt] || 0;
-      r[createdAt] = r[createdAt] + 1;
-      return r;
-    }, Object.create(null));
-    return groupedResult;
-  };
   useEffect(() => {
     async function getData() {
       let url = "/api/v1/employees";
@@ -65,6 +67,21 @@ function Analytics(props) {
     }
     getData();
   }, [startDate, endDate]);
+
+  useEffect(() => {
+    async function getData() {
+      let url = "/api/v1/employees-group";
+      await axios.get(url).then((res) => {
+        let grpData = res?.data?.data || {};
+        let pieDataArr = Object.keys(grpData).map((grp) => {
+          return { label: getGroup(parseInt(grp)), value: grpData[grp].length };
+        });
+        const sortedData = sortArr(pieDataArr, "label", 2);
+        setPieData(sortedData);
+      });
+    }
+    getData();
+  }, []);
 
   const dateChangeFunc = (dateArr) => {
     setStartDate(moment(dateArr[0]).format("YYYY-MM-DD"));
@@ -85,9 +102,15 @@ function Analytics(props) {
       value:
         index === 0 ? (
           <LineWrap>
+            <h2>Employee On-boarded Details</h2>
             <DateRange changeFunc={dateChangeFunc} />
             <LineGraph data={lineData} />
           </LineWrap>
+        ) : index === 1 ? (
+          <DonutWrp>
+            <h2>Employee Group Details</h2>
+            <DonutGraph data={pieData} />
+          </DonutWrp>
         ) : (
           <div>{selectedGraphs[index]}</div>
         ),

@@ -8,7 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { groupList, managersList } from "../../const";
+import { getGroup, getManagerp } from "../../utils";
 
 const useStyles = makeStyles({
   table: {
@@ -50,16 +50,6 @@ const TableTitle = styled.div`
   align-items: center;
   border-bottom: 1px solid #ccc;
 `;
-
-const getGroup = (g) => {
-  let indexVal = groupList.findIndex((grp) => grp.value === g);
-  return indexVal >= 0 ? groupList[indexVal].label : "";
-};
-
-const getManagerp = (m) => {
-  let indexVal = managersList.findIndex((manager) => manager.value === m);
-  return indexVal >= 0 ? managersList[indexVal].label : "";
-};
 
 function EmployeeList(props) {
   const classes = useStyles();

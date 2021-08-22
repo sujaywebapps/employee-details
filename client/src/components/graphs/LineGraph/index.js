@@ -24,7 +24,7 @@ function LineGraph({ data }) {
   //   ];
 
   // set the dimensions and margins of the graph
-  const margin = { top: 10, right: 30, bottom: 80, left: 60 },
+  const margin = { top: 40, right: 30, bottom: 20, left: 60 },
     width = 660 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -85,7 +85,15 @@ function LineGraph({ data }) {
       ])
       .range([height, 0]);
     svg.append("g").call(d3.axisLeft(y));
-
+    debugger;
+    console.log(
+      xAxis.selectAll(".tick").nodes()[0].transform.baseVal.consolidate().matrix
+        .e
+    );
+    const firstXtick = xAxis
+      .selectAll(".tick")
+      .nodes()[0]
+      .transform.baseVal.consolidate().matrix.e;
     // Add the line
     svg
       .append("path")
@@ -98,12 +106,14 @@ function LineGraph({ data }) {
         d3
           .line()
           .x(function (d) {
+            console.log("x(d.label)", x(d.label));
             return x(d.label);
           })
           .y(function (d) {
             return y(d.value);
           })
-      );
+      )
+      .style("transform", `translateX(${firstXtick}px)`);
   };
   useEffect(() => {
     drawGraph();
