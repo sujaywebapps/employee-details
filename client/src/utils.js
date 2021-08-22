@@ -5,7 +5,7 @@ export const getGroup = (g) => {
   return indexVal >= 0 ? groupList[indexVal].label : "";
 };
 
-export const getManagerp = (m) => {
+export const getManager = (m) => {
   let indexVal = managersList.findIndex((manager) => manager.value === m);
   return indexVal >= 0 ? managersList[indexVal].label : "";
 };

@@ -8,7 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { getGroup, getManagerp } from "../../utils";
+import { getGroup, getManager } from "../../utils";
 
 const useStyles = makeStyles({
   table: {
@@ -86,7 +86,7 @@ function EmployeeList(props) {
               <TableCell align="right">{getGroup(row.group)}</TableCell>
               <TableCell align="right">{row.city}</TableCell>
               <TableCell align="right">{row.salary}</TableCell>
-              <TableCell align="right">{getManagerp(row.manager)}</TableCell>
+              <TableCell align="right">{getManager(row.manager)}</TableCell>
               <TableCell align="right">
                 {row.createdAt ? new Date(row.createdAt).toLocaleString() : ""}
               </TableCell>

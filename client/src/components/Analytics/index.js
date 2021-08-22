@@ -9,8 +9,9 @@ import LineGraph from "../graphs/LineGraph";
 import DateRange from "../DateRange";
 import DonutGraph from "../graphs/DonutGraph";
 import { groupByDate } from "./utils";
-import { getGroup, sortArr, getMax } from "../../utils";
+import { getGroup, getManager, sortArr, getMax } from "../../utils";
 import HistogramGraph from "../graphs/HistogramGraph";
+import TreeGraph from "../graphs/TreeGraph";
 
 const RotateText = styled.div`
   ${window.innerWidth > 768
@@ -49,12 +50,52 @@ const HistoWrp = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const selectedGraphs = ["Line", "Pie", "Histogram", "Hierarchy"];
+
+const TreeWrp = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  justify-content: center;
+  align-items: center;
+`;
+
+const treeData1 = {
+  name: "Employee",
+  children: [
+    {
+      name: "Group A",
+      children: [
+        {
+          name: "Manager A",
+          children: [{ name: "Employee A" }, { name: "Employee B" }],
+        },
+        {
+          name: "Manager B",
+          children: [{ name: "Employee C" }, { name: "Employee D" }],
+        },
+      ],
+    },
+    {
+      name: "Group B",
+      children: [
+        {
+          name: "Manager C",
+          children: [{ name: "Employee E" }, { name: "Employee F" }],
+        },
+        {
+          name: "Manager D",
+          children: [{ name: "Employee G" }, { name: "Employee H" }],
+        },
+      ],
+    },
+  ],
+};
 
 function Analytics(props) {
   const [lineData, setLineData] = useState([]);
   const [pieData, setPieData] = useState([]);
   const [histoData, setHistoData] = useState([]);
+  const [treeData, setTreeData] = useState({});
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -111,10 +152,79 @@ function Analytics(props) {
     getData();
   }, []);
 
+  const getEmployeeList = (arr) => {
+    let employeeByMgList = [];
+    [...new Set(arr.map((item) => item.name))].forEach((emp) => {
+      employeeByMgList.push({
+        name: emp,
+      });
+    });
+    return employeeByMgList;
+  };
+
+  const getManagerList = (arr) => {
+    let managersByGrp = [];
+    [...new Set(arr.map((item) => item.manager))].forEach((mg) => {
+      managersByGrp.push({
+        name: getManager(mg),
+        children: getEmployeeList(arr.filter((item) => item.manager === mg)),
+      });
+    });
+    return managersByGrp;
+  };
+
+  const getGroupList = (arr) => {
+    let distinctGroups = [];
+    [...new Set(arr.map((item) => item.group))].forEach((dg) => {
+      distinctGroups.push({
+        name: getGroup(parseInt(dg)),
+        children: getManagerList(arr.filter((item) => item.group === dg)),
+      });
+    });
+    return distinctGroups;
+  };
+
+  useEffect(() => {
+    async function getData() {
+      let url = "/api/v1/employees";
+      await axios.get(url).then((res) => {
+        let grpData = res?.data?.data || [];
+        let treeDataPrep = {
+          name: "Employees",
+          children: getGroupList(grpData),
+        };
+        console.log("grpData", treeDataPrep);
+        setTreeData(treeDataPrep);
+      });
+    }
+    getData();
+  }, []);
+
   const dateChangeFunc = (dateArr) => {
     setStartDate(moment(dateArr[0]).format("YYYY-MM-DD"));
     setEndDate(moment(dateArr[1]).format("YYYY-MM-DD"));
   };
+
+  const selectedGraphs = [
+    <LineWrap>
+      <h2>Employee On-boarded Details</h2>
+      <DateRange changeFunc={dateChangeFunc} />
+      <LineGraph data={lineData} />
+    </LineWrap>,
+    <DonutWrp>
+      <h2>Employee Group Details</h2>
+      <DonutGraph data={pieData} />
+    </DonutWrp>,
+    <HistoWrp>
+      <h2>Employee Salary Details</h2>
+      <HistogramGraph data={histoData} />
+    </HistoWrp>,
+    <TreeWrp>
+      <h2>Employee Manager Relation</h2>
+      <TreeGraph data={treeData} />
+    </TreeWrp>,
+  ];
+
   const elementList = [];
   mockData.forEach((item, index) => {
     elementList.push({
@@ -127,26 +237,7 @@ function Analytics(props) {
           </div>
         </>
       ),
-      value:
-        index === 0 ? (
-          <LineWrap>
-            <h2>Employee On-boarded Details</h2>
-            <DateRange changeFunc={dateChangeFunc} />
-            <LineGraph data={lineData} />
-          </LineWrap>
-        ) : index === 1 ? (
-          <DonutWrp>
-            <h2>Employee Group Details</h2>
-            <DonutGraph data={pieData} />
-          </DonutWrp>
-        ) : index === 2 ? (
-          <HistoWrp>
-            <h2>Employee Salary Details</h2>
-            <HistogramGraph data={histoData} />
-          </HistoWrp>
-        ) : (
-          <div>{selectedGraphs[index]}</div>
-        ),
+      value: selectedGraphs[index],
     });
   });
   return (

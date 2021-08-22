@@ -102,7 +102,6 @@ function LineGraph({ data }) {
         d3
           .line()
           .x(function (d) {
-            console.log("x(d.label)", x(d.label));
             return x(d.label);
           })
           .y(function (d) {
