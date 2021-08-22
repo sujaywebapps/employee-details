@@ -1,6 +1,6 @@
 import React, { useReducer } from "react";
 import axios from "axios";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 import Card from "@material-ui/core/Card";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -19,9 +19,13 @@ const useStyles = makeStyles({
     minHeight: 600,
   },
   textRoot: {
-    padding: "1rem",
-    "& > *": {
-      margin: "2rem 0rem",
+    padding: "3rem",
+    "& > div": {
+      margin: "1rem 0rem",
+      width: "100%",
+    },
+    "& > button": {
+      margin: "1rem 0rem",
       width: "100%",
     },
   },
@@ -53,13 +57,14 @@ function AddEmployeeForm(props) {
       <form className={classes.textRoot} noValidate autoComplete="off">
         <TextField
           id="employee-name"
+          variant="standard"
           label="Name"
           value={state.name}
           onChange={(event) => {
             dispatch({ type: "name", payload: event.target.value });
           }}
         />
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
           <InputLabel id="demo-simple-select-label">Group</InputLabel>
           <Select
             className={classes.selectRoot}
@@ -79,6 +84,7 @@ function AddEmployeeForm(props) {
         </FormControl>
         <TextField
           id="employee-city"
+          variant="standard"
           label="City"
           value={state.city}
           onChange={(event) => {
@@ -87,13 +93,14 @@ function AddEmployeeForm(props) {
         />
         <TextField
           id="employee-salary"
+          variant="standard"
           label="Salary"
           value={state.salary}
           onChange={(event) => {
             dispatch({ type: "salary", payload: event.target.value });
           }}
         />
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
           <InputLabel id="demo-simple-select-label">Manager</InputLabel>
           <Select
             className={classes.selectRoot}
@@ -114,14 +121,19 @@ function AddEmployeeForm(props) {
         <Button
           variant="contained"
           color="primary"
+          fullWidth
           onClick={() => {
             axios
               .post("/api/v1/add-employee", {
                 ...state,
-                createdAt: new Date(),
+                // createdAt: new Date(),
+                createdAt: "2021-08-21T05:58:19.866Z",
               })
               .then((res) => {
                 console.log("res", res);
+                if (res.status === 200) {
+                  dispatch({ type: "reset", payload: {} });
+                }
               });
           }}
         >

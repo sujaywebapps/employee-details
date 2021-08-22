@@ -3,6 +3,7 @@ import {
   getEmployees,
   addEmployee,
   getEmployeesGroup,
+  clearAll,
 } from "../controllers/employeeControllers";
 const router = express.Router();
 
@@ -10,6 +11,7 @@ const router = express.Router();
 router.get("/employees", getEmployees);
 router.get("/employees-group", getEmployeesGroup);
 // router.get("/employees-by-manager", getEmployeesByManager);
+router.get("/clear-all", clearAll);
 
 // Post
 router.post("/add-employee", addEmployee);

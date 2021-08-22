@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { groupList, managersList } from "../../const";
@@ -21,8 +19,15 @@ const useStyles = makeStyles({
 const TableWrp = styled.div`
   width: 70%;
   height: 80%;
-  overflow: scroll-x;
+  overflow: hidden;
+  overflow-y: scroll;
   background-color: white;
+
+  thead {
+    position: sticky;
+    top: 4rem;
+    background-color: #fff;
+  }
 
   thead th {
     font-weight: 600;
@@ -33,6 +38,17 @@ const TableWrp = styled.div`
   table {
     border-top: 1px solid #ccc;
   }
+`;
+
+const TableTitle = styled.div`
+  position: sticky;
+  top: 0;
+  background-color: white;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
 `;
 
 const getGroup = (g) => {
@@ -56,7 +72,10 @@ function EmployeeList(props) {
 
   return (
     <TableWrp>
-      <h2>Employee List</h2>
+      <TableTitle>
+        <h2>Employee List</h2>
+      </TableTitle>
+
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>

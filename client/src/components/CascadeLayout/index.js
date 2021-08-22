@@ -1,4 +1,10 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  Fragment,
+} from "react";
 import styled from "styled-components";
 import { PropTypes } from "prop-types";
 import Loading from "../Loading";
@@ -12,7 +18,7 @@ const WrpAccordian = styled.div`
 
   .acc-item-desc.active {
     width: 100%;
-    min-height: 35rem;
+    min-height: 40rem;
     height: 100%;
   }
   .acc-item.active {
@@ -97,11 +103,11 @@ function CascadeLayout(props) {
   return (
     <WrpAccordian ref={accordianWrpRef}>
       {accordianList.map((accItem, i) => (
-        <>
+        <Fragment key={`acc-key-${i}`}>
           {reloader && ""}
           <AccordianItem
             className={`acc-item ${i === defaultSelection ? "active" : ""}`}
-            data-accDescId={`accDesc${i}`}
+            data-accdescid={`accDesc${i}`}
             onClick={handleClick}
           >
             {accItem.label}
@@ -114,7 +120,7 @@ function CascadeLayout(props) {
           >
             {displayContent ? accItem.value : <Loading />}
           </AccordianItemDesc>
-        </>
+        </Fragment>
       ))}
     </WrpAccordian>
   );

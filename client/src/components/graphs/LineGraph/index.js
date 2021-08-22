@@ -4,24 +4,24 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 
 const GraphWrp = styled.div`
-  height: 35rem;
+  height: 30rem;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-function LineGraph(props) {
+function LineGraph({ data }) {
   const lineContainer = useRef(null);
-  const data = [
-    { label: "10-09-2020", value: 10 },
-    { label: "10-10-2020", value: 20 },
-    { label: "10-11-2020", value: 25 },
-    { label: "10-12-2020", value: 15 },
-    { label: "10-01-2021", value: 23 },
-    { label: "10-02-2021", value: 18 },
-    { label: "10-03-2021", value: 26 },
-    { label: "10-04-2021", value: 10 },
-  ];
+  //   const data = [
+  //     { label: "10-09-2020", value: 10 },
+  //     { label: "10-10-2020", value: 20 },
+  //     { label: "10-11-2020", value: 25 },
+  //     { label: "10-12-2020", value: 15 },
+  //     { label: "10-01-2021", value: 23 },
+  //     { label: "10-02-2021", value: 18 },
+  //     { label: "10-03-2021", value: 26 },
+  //     { label: "10-04-2021", value: 10 },
+  //   ];
 
   // set the dimensions and margins of the graph
   const margin = { top: 10, right: 30, bottom: 80, left: 60 },
@@ -111,6 +111,8 @@ function LineGraph(props) {
   return <GraphWrp ref={lineContainer}></GraphWrp>;
 }
 
-LineGraph.propTypes = {};
+LineGraph.propTypes = {
+  data: PropTypes.array.isRequired,
+};
 
 export default LineGraph;
