@@ -10,8 +10,9 @@ const GraphWrp = styled.div`
   align-items: center;
 `;
 
-function LineGraph({ data }) {
-  const lineContainer = useRef(null);
+function HistogramGraph({ data }) {
+  const histoContainer = useRef(null);
+  //   const data = { a: 9, b: 20, c: 30, d: 8, e: 12 };
   //   const data = [
   //     { label: "10-09-2020", value: 10 },
   //     { label: "10-10-2020", value: 20 },
@@ -24,20 +25,21 @@ function LineGraph({ data }) {
   //   ];
 
   // set the dimensions and margins of the graph
-  const margin = { top: 40, right: 30, bottom: 80, left: 60 },
+  const margin = { top: 40, right: 0, bottom: 80, left: 0 },
     width = 660 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
   const drawGraph = () => {
-    d3.select(lineContainer.current).select("svg").remove();
+    d3.select(histoContainer.current).select("svg").remove();
     const svg = d3
-      .select(lineContainer.current)
+      .select(histoContainer.current)
       .append("svg")
       .attr("width", width + margin.right + margin.left)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    // X axis: scale and draw:
     const x = d3
       .scaleBand()
       .domain(data.map((da) => da.label))
@@ -74,51 +76,60 @@ function LineGraph({ data }) {
       .style("cursor", "default")
       .attr("y", 0);
 
-    // Add Y axis
-    const y = d3
-      .scaleLinear()
-      .domain([
-        0,
-        d3.max(data, function (d) {
-          return +d.value;
-        }),
-      ])
-      .range([height, 0]);
-    svg.append("g").call(d3.axisLeft(y));
+    // set the parameters for the histogram
+    // const histogram = d3
+    //   .bin()
+    //   .value(function (d) {
+    //     return d.value;
+    //   }) // I need to give the vector of value
+    //   .domain(x.domain()); // then the domain of the graphic
+    // //   .thresholds(x.ticks(70)); // then the numbers of bins
 
-    const firstXtick = xAxis
-      .selectAll(".tick")
-      .nodes()[0]
-      .transform.baseVal.consolidate().matrix.e;
-    // Add the line
+    // // And apply this function to data to get the bins
+    // const bins = histogram(data);
+
+    // Y axis: scale and draw:
+    const y = d3.scaleLinear().range([height, 0]);
+    y.domain([0, d3.max(data.map((da) => da.value))]); // d3.hist has to be called before the Y axis obviously
+    svg.append("g").call(d3.axisLeft(y));
+    const barWidth = x.bandwidth() / 2;
+    // append the bar rectangles to the svg element
     svg
-      .append("path")
-      .datum(data)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
-      .attr(
-        "d",
-        d3
-          .line()
-          .x(function (d) {
-            console.log("x(d.label)", x(d.label));
-            return x(d.label);
-          })
-          .y(function (d) {
-            return y(d.value);
-          })
-      )
-      .style("transform", `translateX(${firstXtick}px)`);
+      .selectAll("rect")
+      .data(data)
+      .join("rect")
+      .attr("x", 1)
+      .attr("transform", function (d) {
+        return `translate(${x(d.label) + barWidth / 2} , ${y(d.value)})`;
+      })
+      .attr("width", function (d) {
+        return barWidth;
+      })
+      .attr("height", function (d) {
+        return height - y(d.value);
+      })
+      .style("fill", "#69b3a2");
+
+    svg
+      .append("g")
+      .selectAll("text")
+      .data(data)
+      .join("text")
+      .text((d) => d.value)
+      .attr("transform", function (d) {
+        return `translate(${x(d.label) + barWidth} , ${y(d.value) - 15})`;
+      })
+      .style("fill", "#000")
+      .style("text-anchor", "middle");
   };
   useEffect(() => {
     drawGraph();
   });
-  return <GraphWrp ref={lineContainer}></GraphWrp>;
+  return <GraphWrp ref={histoContainer}></GraphWrp>;
 }
 
-LineGraph.propTypes = {
+HistogramGraph.propTypes = {
   data: PropTypes.array.isRequired,
 };
 
-export default LineGraph;
+export default HistogramGraph;

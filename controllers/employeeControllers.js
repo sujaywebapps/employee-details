@@ -39,8 +39,6 @@ export const getEmployeesGroup = (req, res, next) => {
 };
 
 export async function addEmployee(req, res, next) {
-  console.log("inside add employee");
-  console.log("req?.body", req);
   // db.remove({}, { multi: true }, function (err, numRemoved) {});
   db.insert(req?.body, function (err, newDoc) {
     res.status(200).json({

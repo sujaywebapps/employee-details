@@ -9,7 +9,8 @@ import LineGraph from "../graphs/LineGraph";
 import DateRange from "../DateRange";
 import DonutGraph from "../graphs/DonutGraph";
 import { groupByDate } from "./utils";
-import { getGroup, sortArr } from "../../utils";
+import { getGroup, sortArr, getMax } from "../../utils";
+import HistogramGraph from "../graphs/HistogramGraph";
 
 const RotateText = styled.div`
   ${window.innerWidth > 768
@@ -41,11 +42,19 @@ const DonutWrp = styled.div`
   justify-content: center;
   align-items: center;
 `;
+const HistoWrp = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  justify-content: center;
+  align-items: center;
+`;
 const selectedGraphs = ["Line", "Pie", "Histogram", "Hierarchy"];
 
 function Analytics(props) {
   const [lineData, setLineData] = useState([]);
   const [pieData, setPieData] = useState([]);
+  const [histoData, setHistoData] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -83,6 +92,25 @@ function Analytics(props) {
     getData();
   }, []);
 
+  useEffect(() => {
+    async function getData() {
+      let url = "/api/v1/employees-group";
+      await axios.get(url).then((res) => {
+        let grpData = res?.data?.data || {};
+        let histoDataArr = Object.keys(grpData).map((grp) => {
+          return {
+            label: getGroup(parseInt(grp)),
+            value: getMax(grpData[grp], "salary"),
+          };
+        });
+        const sortedData = sortArr(histoDataArr, "label", 2);
+        console.log("sortedData", sortedData);
+        setHistoData(sortedData);
+      });
+    }
+    getData();
+  }, []);
+
   const dateChangeFunc = (dateArr) => {
     setStartDate(moment(dateArr[0]).format("YYYY-MM-DD"));
     setEndDate(moment(dateArr[1]).format("YYYY-MM-DD"));
@@ -111,6 +139,11 @@ function Analytics(props) {
             <h2>Employee Group Details</h2>
             <DonutGraph data={pieData} />
           </DonutWrp>
+        ) : index === 2 ? (
+          <HistoWrp>
+            <h2>Employee Salary Details</h2>
+            <HistogramGraph data={histoData} />
+          </HistoWrp>
         ) : (
           <div>{selectedGraphs[index]}</div>
         ),

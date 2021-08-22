@@ -21,3 +21,12 @@ export const sortArr = (arr, sortKey, sortType = 1) => {
     );
   }
 };
+
+export const getMax = (arr, key) => {
+  return Math.max.apply(
+    Math,
+    arr.map(function (o) {
+      return o[key];
+    })
+  );
+};
