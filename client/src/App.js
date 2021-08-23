@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import "./App.css";
 import Navbar from "./components/NavBar";
@@ -16,6 +16,8 @@ import AddEmployeeForm from "./components/AddEmployeeForm";
 import styled from "styled-components";
 import EmployeeList from "./components/EmployeeList";
 import Analytics from "./components/Analytics";
+import ThemeProviderContext from "./components/Provider";
+import ToggleBtn from "./components/ToggleBtn";
 
 const Container = styled.div`
   display: flex;
@@ -25,8 +27,10 @@ const Container = styled.div`
 `;
 const App = () => {
   const [theme, setTheme] = useState("light");
+  // const { setThemeC } = useContext(ThemeContext);
   const themeToggler = () => {
     theme === "light" ? setTheme("dark") : setTheme("light");
+    // setThemeC();
   };
   // const [response, setResponse] = useState({});
   // useEffect(() => {
@@ -35,35 +39,37 @@ const App = () => {
   //   });
   // }, []);
   return (
-    <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
-      <>
-        <GlobalStyles />
-        <div className="App">
-          <Router>
-            <Navbar menuList={navMenu} />
-            <button onClick={themeToggler}>Switch Theme</button>
-            <Container>
-              <Switch>
-                <Route
-                  exact
-                  path="/"
-                  render={() => <Redirect to="/add-employee" />}
-                />
-                <Route path="/add-employee">
-                  <AddEmployeeForm />
-                </Route>
-                <Route path="/list-employee">
-                  <EmployeeList />
-                </Route>
-                <Route path="/analytics">
-                  <Analytics />
-                </Route>
-              </Switch>
-            </Container>
-          </Router>
-        </div>
-      </>
-    </ThemeProvider>
+    <ThemeProviderContext>
+      <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
+        <>
+          <GlobalStyles />
+          <div className="App">
+            <Router>
+              <Navbar menuList={navMenu} />
+              <ToggleBtn btnOnClick={themeToggler} />
+              <Container>
+                <Switch>
+                  <Route
+                    exact
+                    path="/"
+                    render={() => <Redirect to="/add-employee" />}
+                  />
+                  <Route path="/add-employee">
+                    <AddEmployeeForm />
+                  </Route>
+                  <Route path="/list-employee">
+                    <EmployeeList />
+                  </Route>
+                  <Route path="/analytics">
+                    <Analytics />
+                  </Route>
+                </Switch>
+              </Container>
+            </Router>
+          </div>
+        </>
+      </ThemeProvider>
+    </ThemeProviderContext>
   );
 };
 
