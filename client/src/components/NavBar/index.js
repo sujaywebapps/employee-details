@@ -8,7 +8,7 @@ const NavbarWrp = styled.ul`
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #333;
+  background-color: ${({ theme }) => theme.background};
   display: flex;
   justify-content: flex-end;
 `;

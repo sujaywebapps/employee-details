@@ -14,7 +14,7 @@ const WrpAccordian = styled.div`
   width: 100%;
   display: flex;
   flex-direction: ${window.innerWidth > 768 ? "row" : "column"};
-  background-color: transparent;
+  background-color: ${({ theme }) => theme.background};
 
   .acc-item-desc.active {
     width: 100%;
@@ -28,8 +28,8 @@ const WrpAccordian = styled.div`
 
 const AccordianItem = styled.div`
   padding: 1rem;
-  background-color: white;
-  border-right: 1px solid #ccc;
+  background-color: ${({ theme }) => theme.background};
+  border-right: 1px solid ${({ theme }) => theme.toggleBorder};
   cursor: pointer;
   display: flex;
   flex-direction: ${window.innerWidth > 768 ? "column" : "row"};
@@ -106,7 +106,8 @@ function CascadeLayout(props) {
         <Fragment key={`acc-key-${i}`}>
           {reloader && ""}
           <AccordianItem
-            className={`acc-item ${i === defaultSelection ? "active" : ""}`}
+            id={`accDesc${i}item`}
+            className={`acc-item ${`accDesc${i}` === reloader ? "active" : ""}`}
             data-accdescid={`accDesc${i}`}
             onClick={handleClick}
           >
@@ -114,7 +115,7 @@ function CascadeLayout(props) {
           </AccordianItem>
           <AccordianItemDesc
             className={`acc-item-desc ${
-              i === defaultSelection ? "active" : ""
+              `accDesc${i}` === reloader ? "active" : ""
             }`}
             id={`accDesc${i}`}
           >

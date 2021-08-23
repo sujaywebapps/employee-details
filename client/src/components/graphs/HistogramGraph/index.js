@@ -79,7 +79,7 @@ function HistogramGraph({ data }) {
       .attr("transform", function (d) {
         return `translate(${x(d.label) + barWidth} , ${y(d.value) - 15})`;
       })
-      .style("fill", "#000")
+      .style("fill", "currentColor")
       .style("text-anchor", "middle");
   };
   useEffect(() => {

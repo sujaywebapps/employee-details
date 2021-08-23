@@ -21,19 +21,28 @@ const TableWrp = styled.div`
   height: 80%;
   overflow: hidden;
   overflow-y: scroll;
-  background-color: white;
+  background-color: ${({ theme }) => theme.background};
+
+  h2 {
+    color: #000;
+  }
+
+  table th,
+  table td {
+    color: ${({ theme }) => theme.text};
+  }
 
   thead {
     position: sticky;
     top: 4rem;
-    background-color: #fff;
+    background-color: ${({ theme }) => theme.background};
   }
 
   thead th {
     font-weight: 600;
   }
   tbody > tr:nth-child(odd) {
-    background-color: #f5f5f5;
+    background-color: ${({ theme }) => theme.background};
   }
   table {
     border-top: 1px solid #ccc;

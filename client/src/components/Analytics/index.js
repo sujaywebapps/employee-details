@@ -242,7 +242,7 @@ function Analytics(props) {
   });
   return (
     <AccWrp>
-      <CascadeLayout accordianList={elementList} defaultSelection={0} />
+      <CascadeLayout accordianList={elementList} />
     </AccWrp>
   );
 }
