@@ -126,8 +126,8 @@ function AddEmployeeForm(props) {
             axios
               .post("/api/v1/add-employee", {
                 ...state,
-                // createdAt: new Date(),
-                createdAt: "2021-08-21T05:58:19.866Z",
+                createdAt: new Date(),
+                // createdAt: "2021-08-21T05:58:19.866Z",
               })
               .then((res) => {
                 console.log("res", res);

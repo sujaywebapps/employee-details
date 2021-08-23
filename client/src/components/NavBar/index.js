@@ -9,7 +9,6 @@ const NavbarWrp = styled.ul`
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: ${({ theme }) => theme.background};
   display: flex;
   justify-content: flex-end;
 
@@ -29,7 +28,7 @@ const NavItemLink = styled(Link)`
   display: block;
   color: white;
   text-align: center;
-  padding: 14px 16px;
+  padding: 0.85rem 1rem;
   text-decoration: none;
 
   &:hover {
@@ -37,9 +36,26 @@ const NavItemLink = styled(Link)`
   }
 `;
 
+const NavMainWrp = styled.nav`
+  display: flex;
+  background-color: ${({ theme }) => theme.background};
+  justify-content: space-between;
+`;
+
+const AppTitle = styled(Link)`
+  color: ${({ theme }) => theme.text};
+  padding: 0.85rem 1rem;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.2rem;
+`;
+
 const Navbar = ({ menuList, themeTogglerFunc }) => {
   return (
-    <nav>
+    <NavMainWrp>
+      <AppTitle to="/">Employee Onboard</AppTitle>
       <NavbarWrp>
         {menuList.map((nav) => (
           <NavItem key={nav.link}>
@@ -50,7 +66,7 @@ const Navbar = ({ menuList, themeTogglerFunc }) => {
           <ToggleBtn btnOnClick={themeTogglerFunc} />
         </NavItem>
       </NavbarWrp>
-    </nav>
+    </NavMainWrp>
   );
 };
 
