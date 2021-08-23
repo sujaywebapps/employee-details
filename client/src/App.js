@@ -45,8 +45,8 @@ const App = () => {
           <GlobalStyles />
           <div className="App">
             <Router>
-              <Navbar menuList={navMenu} />
-              <ToggleBtn btnOnClick={themeToggler} />
+              <Navbar menuList={navMenu} themeTogglerFunc={themeToggler} />
+              {/* <ToggleBtn btnOnClick={themeToggler} /> */}
               <Container>
                 <Switch>
                   <Route

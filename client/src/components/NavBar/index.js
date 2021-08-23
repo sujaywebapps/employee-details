@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import ToggleBtn from "../ToggleBtn";
 
 const NavbarWrp = styled.ul`
   list-style-type: none;
@@ -11,6 +12,15 @@ const NavbarWrp = styled.ul`
   background-color: ${({ theme }) => theme.background};
   display: flex;
   justify-content: flex-end;
+
+  .MuiTypography-root {
+    color: white;
+  }
+  & > li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const NavItem = styled.li``;
@@ -27,7 +37,7 @@ const NavItemLink = styled(Link)`
   }
 `;
 
-const Navbar = ({ menuList }) => {
+const Navbar = ({ menuList, themeTogglerFunc }) => {
   return (
     <nav>
       <NavbarWrp>
@@ -36,6 +46,9 @@ const Navbar = ({ menuList }) => {
             <NavItemLink to={`/${nav.link}`}>{nav.label}</NavItemLink>
           </NavItem>
         ))}
+        <NavItem>
+          <ToggleBtn btnOnClick={themeTogglerFunc} />
+        </NavItem>
       </NavbarWrp>
     </nav>
   );
@@ -43,6 +56,7 @@ const Navbar = ({ menuList }) => {
 
 Navbar.propTypes = {
   menuList: PropTypes.array.isRequired,
+  themeTogglerFunc: PropTypes.func.isRequired,
 };
 
 export default Navbar;
