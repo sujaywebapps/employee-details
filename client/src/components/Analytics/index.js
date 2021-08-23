@@ -59,6 +59,13 @@ const TreeWrp = styled.div`
   align-items: center;
 `;
 
+const NoData = styled.div`
+  color: ${({ theme }) => theme.text};
+  min-height: 30rem;
+  display: flex;
+  align-items: center;
+`;
+
 const treeData1 = {
   name: "Employee",
   children: [
@@ -209,15 +216,27 @@ function Analytics(props) {
     <LineWrap>
       <h2>Employee On-boarded Details</h2>
       <DateRange changeFunc={dateChangeFunc} />
-      <LineGraph data={lineData} />
+      {lineData.length ? (
+        <LineGraph data={lineData} />
+      ) : (
+        <NoData>No Data Found</NoData>
+      )}
     </LineWrap>,
     <DonutWrp>
       <h2>Employee Group Details</h2>
-      <DonutGraph data={pieData} />
+      {pieData.length ? (
+        <DonutGraph data={pieData} />
+      ) : (
+        <NoData>No Data Found</NoData>
+      )}
     </DonutWrp>,
     <HistoWrp>
       <h2>Employee Salary Details</h2>
-      <HistogramGraph data={histoData} />
+      {histoData.length ? (
+        <HistogramGraph data={histoData} />
+      ) : (
+        <NoData>No Data Found</NoData>
+      )}
     </HistoWrp>,
     <TreeWrp>
       <h2>Employee Manager Relation</h2>
