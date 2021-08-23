@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { drawxAxis } from "../baseGraph";
 
 const GraphWrp = styled.div`
   height: 30rem;
@@ -12,16 +13,6 @@ const GraphWrp = styled.div`
 
 function LineGraph({ data }) {
   const lineContainer = useRef(null);
-  //   const data = [
-  //     { label: "10-09-2020", value: 10 },
-  //     { label: "10-10-2020", value: 20 },
-  //     { label: "10-11-2020", value: 25 },
-  //     { label: "10-12-2020", value: 15 },
-  //     { label: "10-01-2021", value: 23 },
-  //     { label: "10-02-2021", value: 18 },
-  //     { label: "10-03-2021", value: 26 },
-  //     { label: "10-04-2021", value: 10 },
-  //   ];
 
   // set the dimensions and margins of the graph
   const margin = { top: 40, right: 30, bottom: 80, left: 60 },
@@ -43,37 +34,6 @@ function LineGraph({ data }) {
       .domain(data.map((da) => da.label))
       .range([0, width]);
 
-    const xAxis = svg
-      .append("g")
-      .attr("calss", "x")
-      .attr("transform", `translate(0, ${height})`)
-      .call(
-        d3.axisBottom(x).tickFormat((d, i) => {
-          if (data.length > 50) {
-            return i % Math.round(data.length / 15) === 0 ? d : "";
-          }
-          if (d.toString().length >= 15) {
-            return `${d.toString().slice(0, 13)}..`;
-          }
-          return d;
-        })
-      );
-
-    if (data.length > 6) {
-      xAxis
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", "rotate(-65)");
-    }
-    xAxis
-      .selectAll("text")
-      .append("svg:title")
-      .text((d) => d)
-      .style("cursor", "default")
-      .attr("y", 0);
-
     // Add Y axis
     const y = d3
       .scaleLinear()
@@ -84,6 +44,16 @@ function LineGraph({ data }) {
         }),
       ])
       .range([height, 0]);
+
+    const config = {
+      data,
+      height,
+      width,
+      x,
+      y,
+    };
+    const xAxis = drawxAxis(svg, config);
+
     svg.append("g").call(d3.axisLeft(y));
 
     const firstXtick = xAxis
