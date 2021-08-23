@@ -121,12 +121,13 @@ function DonutGraph({ data }) {
       .append("div")
       .style("opacity", 0)
       .attr("class", "tooltip")
-      .style("background-color", "white")
+      .style("background-color", "#6d6565")
       .style("border", "solid")
       .style("border-width", "2px")
       .style("border-radius", "5px")
       .style("padding", "5px")
-      .style("position", "absolute");
+      .style("position", "absolute")
+      .style("color", "currentColor");
 
     // Three function that change the tooltip when user hover / move / leave a cell
     var mouseover = function (event, d) {

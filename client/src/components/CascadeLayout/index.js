@@ -18,7 +18,7 @@ const WrpAccordian = styled.div`
 
   .acc-item-desc.active {
     width: 100%;
-    min-height: 40rem;
+    height: 40rem;
     height: 100%;
   }
   .acc-item.active {
@@ -40,8 +40,8 @@ const AccordianItemDesc = styled.div`
   width: ${window.innerWidth > 768 ? "0" : "100%"};
   position: relative;
   overflow: hidden;
-  min-height: ${window.innerWidth > 768 ? "40rem" : "0rem"};
-  height: ${window.innerWidth > 768 ? "100%" : "0"};
+  height: ${window.innerWidth > 768 ? "40rem" : "0rem"};
+
   transition: all 300ms ease-in;
 `;
 
